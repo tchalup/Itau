@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+    webapi:
+        container_name: "itau-api"
+        image: itauapi
+        build: .
+        environment:
+            ConnectionStrings__ItauConnection: "Server=localhost;Database=Itau2Database;User Id=sa;Password=1234@qwer;"
+            TheCatAPI__URI: "https://api.thecatapi.com/"
+            ElasticConfiguration__Uri: "http://localhost:9200"
+        ports:
+            - "8000:80"
+        depends_on:
+            - db
+    db:
+        container_name: "itau-db"
+        image: "mcr.microsoft.com/mssql/server"
+        ports:
+            - "1433:1433"
+        environment:
+            SA_PASSWORD: "1234@qwer"
+            ACCEPT_EULA: "Y"
