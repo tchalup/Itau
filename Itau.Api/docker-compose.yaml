@@ -13,8 +13,10 @@ services:
             ConnectionStrings__ItauConnection: "Server=itau-db;Database=ItauDatabase;User Id=sa;Password=1234@qwer;"
             TheCatAPI__URI: "https://api.thecatapi.com/"
             ElasticConfiguration__Uri: "http://localhost:9200"
+            ASPNETCORE_ENVIRONMENT: Development
+            ASPNETCORE_URLS: http://+:80
         ports:
-            - "8000:80"
+            - "8080:80"
         depends_on:
             - db
         networks:
