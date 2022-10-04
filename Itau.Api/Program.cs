@@ -53,6 +53,12 @@ Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(configuration)
     .CreateLogger();
 
+Console.WriteLine($@"ConnectionStrings__ItauConnection: {connectionString}
+                     TheCatAPI__URI: {theCatConfig.URI}
+                     ElasticConfiguration__Uri: {configuration["ElasticConfiguration:Uri"]}
+                     environment: {environment}");
+
+
 var app = builder.Build();
 
 await SeedData(app);

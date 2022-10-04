@@ -1,17 +1,25 @@
 version: "3.9"
+
 services:
+
     webapi:
         container_name: "itau-api"
         image: itauapi
-        build: .
+        restart: always
+        build:
+            context: .
+            dockerfile: Itau.Api/Dockerfile
         environment:
-            ConnectionStrings__ItauConnection: "Server=localhost;Database=Itau2Database;User Id=sa;Password=1234@qwer;"
+            ConnectionStrings__ItauConnection: "Server=itau-db;Database=ItauDatabase;User Id=sa;Password=1234@qwer;"
             TheCatAPI__URI: "https://api.thecatapi.com/"
             ElasticConfiguration__Uri: "http://localhost:9200"
         ports:
             - "8000:80"
         depends_on:
             - db
+        networks:
+          - itau-network
+
     db:
         container_name: "itau-db"
         image: "mcr.microsoft.com/mssql/server"
@@ -20,3 +28,9 @@ services:
         environment:
             SA_PASSWORD: "1234@qwer"
             ACCEPT_EULA: "Y"
+        networks:
+          - itau-network
+
+networks:
+  itau-network:
+    driver: bridge
