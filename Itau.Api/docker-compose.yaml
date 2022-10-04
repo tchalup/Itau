@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
     webapi:
-        container_name: "itau-api"
+        container_name: itau-api
         image: itauapi
         restart: always
         build:
@@ -20,10 +20,10 @@ services:
         depends_on:
             - db
         networks:
-          - itau-network
+            - itau-network
 
     db:
-        container_name: "itau-db"
+        container_name: itau-db
         image: "mcr.microsoft.com/mssql/server"
         ports:
             - "1433:1433"
@@ -31,8 +31,38 @@ services:
             SA_PASSWORD: "1234@qwer"
             ACCEPT_EULA: "Y"
         networks:
-          - itau-network
+            - itau-network
+
+    elasticsearch:
+        container_name: itau-elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.9.2
+        ports:
+            - 9200:9200
+        volumes:
+            - elasticsearch-data:/usr/share/elasticsearch/data
+        environment:
+            - xpack.monitoring.enabled=true
+            - xpack.watcher.enabled=false
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - discovery.type=single-node
+        networks:
+            - itau-network
+
+    kibana:
+        container_name: itau-kibana
+        image: docker.elastic.co/kibana/kibana:7.9.2
+        environment:
+            - ELASTICSEARCH_URL=http://localhost:9200
+        ports:
+            - 5601:5601
+        depends_on:
+            - elasticsearch
+        networks:
+            - itau-network
 
 networks:
-  itau-network:
-    driver: bridge
+    itau-network:
+        driver: bridge
+
+volumes:
+    elasticsearch-data:
